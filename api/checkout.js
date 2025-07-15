@@ -75,9 +75,6 @@ export default async function handler(req, res) {
           message:
             "Wyrażam zgodę na comiesięczne pobieranie opłat za mentoring przez okres 6 miesięcy. Przyjmuję do wiadomości, że zakup oznacza zobowiązanie finansowe na pełny okres trwania programu.",
         },
-        submit: {
-          message: "Zapłać 500 zł (pierwsza z 6 rat)",
-        },
       },
 
       // DANE DO FAKTURY
