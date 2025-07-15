@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pani od Skóry - Landing Page</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <h1 class="logo">Pani od Skóry</h1>
+                <ul class="nav-menu">
+                    <li><a href="#uslugi">UsBugi</a></li>
+                    <li><a href="#cennik">Cennik</a></li>
+                    <li><a href="#kontakt">Kontakt</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Profesjonalna pielgnacja skóry</h2>
+                <p>Odkryj pikno swojej skóry dziki naszym zabiegom</p>
+                <button class="cta-button" onclick="scrollToSection('uslugi')">Poznaj nasze usBugi</button>
+            </div>
+        </section>
+
+        <section id="uslugi" class="services">
+            <div class="container">
+                <h2>Nasze UsBugi</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Oczyszczanie twarzy</h3>
+                        <p>GBbokie oczyszczanie manualne dostosowane do typu cery</p>
+                        <span class="price">150 zB</span>
+                        <button class="buy-button" data-product-id="price_1QbSJwP8r5vzqKc4k5LzZHBG">Kup teraz</button>
+                    </div>
+                    <div class="service-card">
+                        <h3>Mezoterapia igBowa</h3>
+                        <p>Intensywne nawil|enie i regeneracja skóry</p>
+                        <span class="price">350 zB</span>
+                        <button class="buy-button" data-product-id="price_mezo_1">Kup teraz</button>
+                    </div>
+                    <div class="service-card">
+                        <h3>Peeling chemiczny</h3>
+                        <p>Odnowa naskórka i poprawa kolorytu</p>
+                        <span class="price">250 zB</span>
+                        <button class="buy-button" data-product-id="price_peeling_1">Kup teraz</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cennik" class="pricing">
+            <div class="container">
+                <h2>Cennik zabiegów</h2>
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Zabieg</th>
+                            <th>Czas trwania</th>
+                            <th>Cena</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Oczyszczanie twarzy</td>
+                            <td>60 min</td>
+                            <td>150 zB</td>
+                        </tr>
+                        <tr>
+                            <td>Mezoterapia igBowa</td>
+                            <td>45 min</td>
+                            <td>350 zB</td>
+                        </tr>
+                        <tr>
+                            <td>Peeling chemiczny</td>
+                            <td>30 min</td>
+                            <td>250 zB</td>
+                        </tr>
+                        <tr>
+                            <td>Mikrodermabrazja</td>
+                            <td>45 min</td>
+                            <td>200 zB</td>
+                        </tr>
+                        <tr>
+                            <td>Masa| twarzy</td>
+                            <td>30 min</td>
+                            <td>100 zB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="kontakt" class="contact">
+            <div class="container">
+                <h2>Kontakt</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Adres</h3>
+                        <p>ul. Pikna 15<br>00-549 Warszawa</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Telefon</h3>
+                        <p>+48 123 456 789</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Email</h3>
+                        <p>kontakt@paniodskory.pl</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Godziny otwarcia</h3>
+                        <p>Pon-Pt: 9:00 - 19:00<br>Sob: 10:00 - 16:00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Pani od Skóry. Wszystkie prawa zastrze|one.</p>
+        </div>
+    </footer>
+
+    <div id="error-message" class="error-message" style="display: none;"></div>
+    <div id="success-message" class="success-message" style="display: none;"></div>
+
+    <script src="js/stripe-integration.js"></script>
+    <script>
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
