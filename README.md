@@ -1,95 +1,80 @@
 # Płatności Ratalne - Integracja ze Stripe
 
-Projekt integracji płatności ratalnych ze Stripe Checkout, z obowiązkowym checkboxem akceptacji warunków.
+Minimalistyczna integracja płatności ratalnych ze Stripe Checkout.
 
 ## Funkcjonalności
 
 - ✅ Płatności ratalne 6 x 500 PLN
 - ✅ Obowiązkowy checkbox z treścią zgody
 - ✅ Automatyczne pobieranie rat co miesiąc
-- ✅ Integracja ze Stripe Checkout
-- ✅ Strony sukcesu i anulowania płatności
+- ✅ Możliwość wystawienia faktury na firmę (NIP)
+- ✅ Wszystko obsługiwane przez Stripe (checkout, sukces, faktury)
+- ✅ Zabezpieczenia: rate limiting, logowanie
 
 ## Struktura projektu
 
 ```
 ├── api/
-│   └── checkout.js      # Backend endpoint do tworzenia sesji Stripe
-├── public/
-│   ├── index.html      # Strona główna z przyciskiem płatności
-│   ├── success.html    # Strona potwierdzenia płatności
-│   └── cancel.html     # Strona anulowania płatności
-├── css/
-│   └── style.css       # Style CSS (jeśli używane)
-├── .env                # Konfiguracja Stripe (nie commituj!)
-├── package.json        # Zależności projektu
-└── README.md          # Ten plik
+│   └── checkout.js      # Endpoint tworzący sesję Stripe
+├── vercel.json          # Konfiguracja Vercel
+├── package.json         # Zależności
+├── .env                 # Zmienne środowiskowe (nie commituj!)
+└── README.md           # Ten plik
 ```
+
+## Użycie
+
+### Link do płatności:
+```
+https://payment.paniodskory.pl
+```
+
+Kliknięcie w link automatycznie przekierowuje do formularza Stripe z:
+- Obowiązkowym checkboxem zgody
+- Opcją podania NIP dla faktury
+- Formularzem płatności
 
 ## Konfiguracja
 
 ### 1. Stripe Dashboard
 
 1. Zaloguj się do [Stripe Dashboard](https://dashboard.stripe.com)
-2. Utwórz nowy produkt:
-   - Nazwa: np. "Mentoring - Plan Ratalny"
-   - Typ: Subskrypcja
-3. Dodaj cenę:
-   - Kwota: 500 PLN
-   - Okres rozliczeniowy: Miesięcznie
-   - Liczba cykli: 6
-4. Skopiuj `price_ID` (zaczyna się od `price_`)
+2. Utwórz produkt typu Subskrypcja
+3. Ustaw cenę: 500 PLN miesięcznie, 6 cykli
+4. Skopiuj `price_ID`
 
-### 2. Zmienne środowiskowe
-
-Uzupełnij plik `.env`:
+### 2. Zmienne środowiskowe (.env)
 
 ```env
-STRIPE_SECRET_KEY=sk_test_... # Twój klucz tajny Stripe
-STRIPE_PRICE_ID=price_...     # ID ceny z punktu 1
-DOMAIN=https://twoja-domena.pl # Twoja domena (bez slasha na końcu)
+STRIPE_SECRET_KEY=sk_live_...  # Klucz tajny Stripe
+STRIPE_PRICE_ID=price_...      # ID ceny produktu
+DOMAIN=https://payment.paniodskory.pl
 ```
 
-### 3. Obowiązkowy checkbox
+### 3. Deploy na Vercel
 
-Checkbox jest już skonfigurowany w `api/checkout.js` z treścią:
-> "Wyrażam zgodę na comiesięczne pobieranie opłat za mentoring przez okres 6 miesięcy. Przyjmuję do wiadomości, że zakup oznacza zobowiązanie finansowe na pełny okres trwania programu."
+1. Połącz repo z Vercel
+2. Dodaj zmienne środowiskowe w panelu Vercel
+3. Przypisz domenę payment.paniodskory.pl
 
-Użytkownik **musi** zaznaczyć checkbox, aby móc dokończyć płatność.
+## Zabezpieczenia
 
-## Deployment
+- Rate limiting: max 5 requestów/minutę per IP
+- Tylko metoda GET dozwolona
+- Logowanie wszystkich requestów
+- Nagłówki bezpieczeństwa (X-Frame-Options, etc.)
 
-### Opcja 1: Vercel (zalecane)
+## Flow płatności
 
-1. Zainstaluj Vercel CLI: `npm i -g vercel`
-2. W katalogu projektu: `vercel`
-3. Dodaj zmienne środowiskowe w panelu Vercel
-4. Deploy: `vercel --prod`
+1. Użytkownik klika link
+2. Przekierowanie do Stripe Checkout
+3. Wypełnia formularz (z checkboxem i opcjonalnie NIP)
+4. Płaci kartą
+5. Stripe pokazuje stronę sukcesu
+6. Automatyczne raty co miesiąc × 5
 
-### Opcja 2: Netlify Functions
+## Uwagi
 
-1. Utwórz `netlify.toml` z konfiguracją
-2. Deploy przez panel Netlify
-3. Dodaj zmienne środowiskowe
-
-### Opcja 3: Własny serwer Node.js
-
-Projekt wymaga Node.js do obsługi endpointu `/api/checkout`.
-
-## Testowanie
-
-1. Użyj testowych kluczy Stripe (zaczynają się od `_test_`)
-2. Testowe numery kart: `4242 4242 4242 4242`
-3. Dowolna przyszła data ważności i CVC
-
-## Bezpieczeństwo
-
-- ⚠️ **NIGDY** nie commituj pliku `.env`
-- ⚠️ Używaj tylko kluczy `sk_live_` na produkcji
-- ⚠️ Zabezpiecz endpoint przed nieautoryzowanym dostępem
-
-## Wsparcie
-
-W razie problemów sprawdź:
-- [Dokumentacja Stripe Checkout](https://stripe.com/docs/payments/checkout)
-- [Stripe API Reference](https://stripe.com/docs/api)
+- Używasz klucza LIVE - to prawdziwe płatności!
+- Stripe automatycznie wysyła faktury (jeśli podano NIP)
+- Klienci mogą zarządzać subskrypcją w Stripe Customer Portal
