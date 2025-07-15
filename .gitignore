@@ -31,3 +31,4 @@ build/
 
 # Stripe test keys (never commit real keys!)
 stripe-keys.txt
+.vercel

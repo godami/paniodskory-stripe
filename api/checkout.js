@@ -76,7 +76,6 @@ export default async function handler(req, res) {
       },
 
       // DANE DO FAKTURY
-      customer_creation: 'always',
       tax_id_collection: {
         enabled: true,
       },
@@ -102,6 +101,20 @@ export default async function handler(req, res) {
     res.redirect(303, session.url);
   } catch (error) {
     console.error(`[CHECKOUT ERROR] ${error.message}`);
-    res.status(500).json({ error: 'Wystąpił błąd podczas tworzenia sesji płatności.' });
+    console.error(`[CHECKOUT ERROR DETAILS] Type: ${error.type}, Code: ${error.code}, Status: ${error.statusCode}`);
+    
+    // Bardziej szczegółowa odpowiedź w zależności od typu błędu
+    if (error.type === 'StripeInvalidRequestError') {
+      console.error(`[STRIPE INVALID REQUEST] ${JSON.stringify(error.param)} - ${error.message}`);
+      res.status(400).json({ 
+        error: 'Nieprawidłowe żądanie do Stripe. Sprawdź konfigurację.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    } else if (error.type === 'StripeAuthenticationError') {
+      console.error('[STRIPE AUTH ERROR] Problem z kluczem API');
+      res.status(401).json({ error: 'Problem z autoryzacją Stripe. Sprawdź klucz API.' });
+    } else {
+      res.status(500).json({ error: 'Wystąpił błąd podczas tworzenia sesji płatności.' });
+    }
   }
 }
