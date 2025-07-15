@@ -1,53 +1,95 @@
-# Pani od Skóry - Landing Page
+# Płatności Ratalne - Integracja ze Stripe
 
-Landing page dla gabinetu kosmetycznego z integracją płatności Stripe.
+Projekt integracji płatności ratalnych ze Stripe Checkout, z obowiązkowym checkboxem akceptacji warunków.
 
 ## Funkcjonalności
 
-- Responsywny design
-- Sekcja z usługami i cennikiem
-- Integracja z Stripe Checkout
-- Formularz kontaktowy
-- Smooth scrolling między sekcjami
+- ✅ Płatności ratalne 6 x 500 PLN
+- ✅ Obowiązkowy checkbox z treścią zgody
+- ✅ Automatyczne pobieranie rat co miesiąc
+- ✅ Integracja ze Stripe Checkout
+- ✅ Strony sukcesu i anulowania płatności
 
 ## Struktura projektu
 
 ```
-├── index.html          # Główny plik HTML
+├── api/
+│   └── checkout.js      # Backend endpoint do tworzenia sesji Stripe
+├── public/
+│   ├── index.html      # Strona główna z przyciskiem płatności
+│   ├── success.html    # Strona potwierdzenia płatności
+│   └── cancel.html     # Strona anulowania płatności
 ├── css/
-│   └── style.css      # Style CSS
-├── js/
-│   └── stripe-integration.js  # Integracja ze Stripe
-├── img/               # Katalog na obrazy
-└── README.md         # Ten plik
+│   └── style.css       # Style CSS (jeśli używane)
+├── .env                # Konfiguracja Stripe (nie commituj!)
+├── package.json        # Zależności projektu
+└── README.md          # Ten plik
 ```
 
-## Konfiguracja Stripe
+## Konfiguracja
 
-1. Zastąp `STRIPE_PUBLIC_KEY` w pliku `js/stripe-integration.js` swoim kluczem publicznym Stripe
-2. Utwórz backend endpoint `/create-checkout-session` do tworzenia sesji płatności
-3. Skonfiguruj webhooki Stripe do obsługi zdarzeń płatności
+### 1. Stripe Dashboard
 
-## Wymagania backendu
+1. Zaloguj się do [Stripe Dashboard](https://dashboard.stripe.com)
+2. Utwórz nowy produkt:
+   - Nazwa: np. "Mentoring - Plan Ratalny"
+   - Typ: Subskrypcja
+3. Dodaj cenę:
+   - Kwota: 500 PLN
+   - Okres rozliczeniowy: Miesięcznie
+   - Liczba cykli: 6
+4. Skopiuj `price_ID` (zaczyna się od `price_`)
 
-Aby w pełni zintegrować płatności, potrzebujesz serwera backendowego z następującymi endpointami:
+### 2. Zmienne środowiskowe
 
-- `POST /create-checkout-session` - tworzenie sesji Stripe Checkout
-- `POST /process-payment` - przetwarzanie płatności (opcjonalne dla Payment Request API)
-- Webhook endpoint do obsługi zdarzeń Stripe
+Uzupełnij plik `.env`:
 
-## Uruchomienie lokalne
+```env
+STRIPE_SECRET_KEY=sk_test_... # Twój klucz tajny Stripe
+STRIPE_PRICE_ID=price_...     # ID ceny z punktu 1
+DOMAIN=https://twoja-domena.pl # Twoja domena (bez slasha na końcu)
+```
 
-1. Otwórz `index.html` w przeglądarce
-2. Dla pełnej funkcjonalności płatności wymagany jest serwer HTTP (np. Live Server w VS Code)
+### 3. Obowiązkowy checkbox
 
-## Technologie
+Checkbox jest już skonfigurowany w `api/checkout.js` z treścią:
+> "Wyrażam zgodę na comiesięczne pobieranie opłat za mentoring przez okres 6 miesięcy. Przyjmuję do wiadomości, że zakup oznacza zobowiązanie finansowe na pełny okres trwania programu."
 
-- HTML5
-- CSS3 (Flexbox, Grid)
-- JavaScript (ES6+)
-- Stripe.js v3
+Użytkownik **musi** zaznaczyć checkbox, aby móc dokończyć płatność.
 
-## Licencja
+## Deployment
 
-Wszystkie prawa zastrzeżone © 2025 Pani od Skóry
+### Opcja 1: Vercel (zalecane)
+
+1. Zainstaluj Vercel CLI: `npm i -g vercel`
+2. W katalogu projektu: `vercel`
+3. Dodaj zmienne środowiskowe w panelu Vercel
+4. Deploy: `vercel --prod`
+
+### Opcja 2: Netlify Functions
+
+1. Utwórz `netlify.toml` z konfiguracją
+2. Deploy przez panel Netlify
+3. Dodaj zmienne środowiskowe
+
+### Opcja 3: Własny serwer Node.js
+
+Projekt wymaga Node.js do obsługi endpointu `/api/checkout`.
+
+## Testowanie
+
+1. Użyj testowych kluczy Stripe (zaczynają się od `_test_`)
+2. Testowe numery kart: `4242 4242 4242 4242`
+3. Dowolna przyszła data ważności i CVC
+
+## Bezpieczeństwo
+
+- ⚠️ **NIGDY** nie commituj pliku `.env`
+- ⚠️ Używaj tylko kluczy `sk_live_` na produkcji
+- ⚠️ Zabezpiecz endpoint przed nieautoryzowanym dostępem
+
+## Wsparcie
+
+W razie problemów sprawdź:
+- [Dokumentacja Stripe Checkout](https://stripe.com/docs/payments/checkout)
+- [Stripe API Reference](https://stripe.com/docs/api)
