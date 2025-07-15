@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       // OBOWIĄZKOWY CHECKBOX
       consent_collection: {
         terms_of_service: "required",
-        payment_method_reuse_agreement: "hidden",
+        payment_method_reuse_agreement: { position: "hidden" },
       },
 
       // TUTAJ WPISZ SWOJĄ TREŚĆ
